@@ -24,9 +24,9 @@ public class SocialMediaController {
     private MessageService messageService;
     private AccountService accountService;
 
-    public SocialMediaController(MessageService messageService) {
+    public SocialMediaController(MessageService messageService, AccountService accountService) {
         this.messageService = messageService;
-        //this.accountService = accountService;
+        this.accountService = accountService;
     }
 
     // public SocialMediaController(AccountService accountService) {
@@ -37,12 +37,15 @@ public class SocialMediaController {
     public ResponseEntity<Message> createMessage(@RequestBody Message messageToCreate) {
         if (messageToCreate.getMessageText() == null ||
             messageToCreate.getMessageText().trim().isEmpty() ||
-            messageToCreate.getMessageText().length() > 255
+            messageToCreate.getMessageText().length() > 255 ||
+            accountService.userExists(messageToCreate.getPostedBy())
         ) {
             return ResponseEntity.badRequest().build();
         }
 
+
         Message result = messageService.persistMessage(messageToCreate);
+        //System.out.println("Result" + result);
         if (result != null) {
             return ResponseEntity.ok(result);
         }

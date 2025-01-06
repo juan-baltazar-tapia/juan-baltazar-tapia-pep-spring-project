@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +22,9 @@ public class AccountService {
      */
     public Account persistAccount(Account account){
         return accountRepository.save(account);
+    }
+
+    public Optional<Account> userExists(boolean b) {
+        return accountRepository.findById(b);
     }
 }
