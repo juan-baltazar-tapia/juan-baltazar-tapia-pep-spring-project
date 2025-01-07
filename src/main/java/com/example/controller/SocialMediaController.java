@@ -26,10 +26,6 @@ public class SocialMediaController {
         this.accountService = accountService;
     }
 
-    public SocialMediaController(AccountService accountService) {
-        this.accountService = accountService;
-    }
-
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessage(@RequestBody Message messageToCreate) {
         if (messageToCreate.getMessageText() == null ||
