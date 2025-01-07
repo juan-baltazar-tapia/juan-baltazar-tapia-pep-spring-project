@@ -8,7 +8,8 @@ import com.example.repository.MessageRepository;
 
 @Service
 public class MessageService {
-    MessageRepository messageRepository;
+    private final MessageRepository messageRepository;
+
     @Autowired
     public MessageService(MessageRepository messageRepository){
         this.messageRepository = messageRepository;
@@ -20,5 +21,13 @@ public class MessageService {
      */
     public Message persistMessage(Message Message){
         return messageRepository.save(Message);
+    }
+
+    public void deleteMessage(int id){
+       messageRepository.deleteById(id);
+    }
+
+    public boolean existsById(int id) {
+        return messageRepository.existsById(id);
     }
 }
