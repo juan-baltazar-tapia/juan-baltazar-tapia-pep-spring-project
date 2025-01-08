@@ -107,16 +107,17 @@ public class SocialMediaController {
      *  Status Code: 200
      *  Response Body: 1 (one row modified)
      * String json = "{\"messageText\": \"text changed\"}";
+     *  TODO
      */
-    @PatchMapping("/messages/{id}")
-    public ResponseEntity<Integer> updateMessage(@PathVariable("id") int id, @ResponseBody Message message) {
-        if (messageService.existsById(id)) {
-            messageService.updateMessage(id);
-            return ResponseEntity.ok(1);
-        } else {
-            return ResponseEntity.ok().build();
-        }
-    }
+    // @PatchMapping("/messages/{id}")
+    // public ResponseEntity<Integer> updateMessage(@PathVariable("id") int id, @ResponseBody Message message) {
+    //     if (messageService.existsById(id)) {
+    //         messageService.updateMessage(id);
+    //         return ResponseEntity.ok(1);
+    //     } else {
+    //         return ResponseEntity.ok().build();
+    //     }
+    // }
 
 
     
