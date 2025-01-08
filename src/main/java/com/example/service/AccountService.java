@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.entity.Account;
 import com.example.repository.AccountRepository;
+import com.example.repository.MessageRepository;
 
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+
     @Autowired
     public AccountService(AccountRepository accountRepository){
         this.accountRepository = accountRepository;
@@ -24,7 +26,9 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    // public Optional<Account> userExists(boolean b) {
-    //     return accountRepository.findById(b);
-    // }
+    public Optional<Account> userExists(int id) {
+        return accountRepository.findById(id);
+    }
+
+
 }

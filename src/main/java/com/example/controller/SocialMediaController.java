@@ -1,12 +1,18 @@
 package com.example.controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
@@ -55,5 +61,63 @@ public class SocialMediaController {
             return ResponseEntity.ok().build();
         }
     }
+     /**
+     * Sending an http request to GET localhost:8080/accounts/9998/messages (messages does NOT exist for user) 
+     * 
+     * Expected Response:
+     *  Status Code: 200
+     *  Response Body: 
+     */
+    @GetMapping("/accounts/{id}/messages")
+    public ResponseEntity<List<Message>> getAllMessagesById(@PathVariable("id") int id) {
+        List<Message> response;
+        if (!accountService.userExists(id).isEmpty()) {
+            response = messageService.getAllMessagesById(id);
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.ok(null);
+        }
+    }
+
+    @GetMapping("/messages")
+    public List<Message> getAllMessages() {
+        return messageService.getAllMessages();
+    }
+    /**
+     * Sending an http request to GET localhost:8080/messages/100 (message id 100 does not exist)
+     * 
+     * Expected Response:
+     *  Status Code: 200
+     *  Response Body: 
+     */
+    @GetMapping("/messages/{id}")
+    public ResponseEntity<Optional<Message>> getMessageById(@PathVariable("id") int id) {
+        Optional<Message> response;
+        if (messageService.existsById(id)) {
+            response = messageService.getMessageById(id);
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.ok(null);
+        }
+    }
+      /**
+     * Sending an http request to PATCH localhost:8080/messages/9999 (message id exists in db) and successful message text
+     * 
+     * Expected Response:
+     *  Status Code: 200
+     *  Response Body: 1 (one row modified)
+     * String json = "{\"messageText\": \"text changed\"}";
+     */
+    @PatchMapping("/messages/{id}")
+    public ResponseEntity<Integer> updateMessage(@PathVariable("id") int id, @ResponseBody Message message) {
+        if (messageService.existsById(id)) {
+            messageService.updateMessage(id);
+            return ResponseEntity.ok(1);
+        } else {
+            return ResponseEntity.ok().build();
+        }
+    }
+
+
     
 }
