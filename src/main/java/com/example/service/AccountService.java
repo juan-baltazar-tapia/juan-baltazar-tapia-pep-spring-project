@@ -30,5 +30,16 @@ public class AccountService {
         return accountRepository.findById(id);
     }
 
+    public  Optional<Account> userExistsByName(String name) {
+        return accountRepository.findByUsername(name);
+    }
+
+    public Account getUserById(int id) {
+        return accountRepository.getById(id);
+    }
+
+    public Account getUserByUsername(String name) {
+        return accountRepository.getByUsername(name);
+    }
 
 }

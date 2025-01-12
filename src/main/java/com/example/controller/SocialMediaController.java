@@ -110,8 +110,6 @@ public class SocialMediaController {
      */
     @PatchMapping("/messages/{id}")
     public ResponseEntity<Integer> updateMessage(@PathVariable("id") int id, @RequestBody Message message) {
-        System.out.println("MESSAGE TEXT:" + message.getMessageText() + "-----");
-        System.out.println(message.getMessageText() == "");
 
         if (message.getMessageText() == "" ||
            message.getMessageText().length() > 255 ||
@@ -123,5 +121,47 @@ public class SocialMediaController {
             return ResponseEntity.ok(1);
         }
     }
-   
+     /**
+     * Sending an http request to POST localhost:8080/login with valid username and password
+     * 
+     * Expected Response:
+     *  Status Code: 200
+     *  Response Body: JSON representation of user object
+     * Invalid return status code 401
+     */ 
+    @PostMapping("/login")
+    public ResponseEntity<Optional<Account>> login(@RequestBody Account account) {
+     
+        Optional<Account> user = accountService.userExistsByName(account.getUsername());
+
+        if (user.isEmpty()){
+            System.out.println("IS EMPTY");
+            return ResponseEntity.status(401).build();
+        }
+        Account userFound = accountService.getUserByUsername(account.getUsername());
+
+        if (!userFound.getUsername().equals(account.getUsername()) ||
+        !userFound.getPassword().equals(account.getPassword()))  {
+            return ResponseEntity.status(401).build();
+        }
+        
+        return ResponseEntity.ok(user);
+    }
+    /**
+     * Sending an http request to POST localhost:8080/register when username does not exist in the system
+     * 
+     * Expected Response:
+     *  Status Code: 200
+     *  Response Body: JSON representation of user object
+     */
+    @PostMapping("/register")
+    public ResponseEntity<Account> register(@RequestBody Account accountToCreate) {
+
+        if (!accountService.userExistsByName(accountToCreate.getUsername()).isEmpty()){
+            return ResponseEntity.status(409).build();
+        }
+        Account result = accountService.persistAccount(accountToCreate);
+        return ResponseEntity.ok(result);
+    }
+
 }
