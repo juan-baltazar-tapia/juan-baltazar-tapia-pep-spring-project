@@ -36,15 +36,13 @@ public class SocialMediaController {
     public ResponseEntity<Message> createMessage(@RequestBody Message messageToCreate) {
         if (messageToCreate.getMessageText() == null ||
             messageToCreate.getMessageText().trim().isEmpty() ||
-            messageToCreate.getMessageText().length() > 255 //||
-           // accountService.userExists(messageToCreate.getPostedBy())
+            messageToCreate.getMessageText().length() > 255 ||
+            accountService.userExists(messageToCreate.getPostedBy()).isEmpty()
         ) {
             return ResponseEntity.badRequest().build();
         }
 
-
         Message result = messageService.persistMessage(messageToCreate);
-        //System.out.println("Result" + result);
         if (result != null) {
             return ResponseEntity.ok(result);
         }
@@ -107,18 +105,23 @@ public class SocialMediaController {
      *  Status Code: 200
      *  Response Body: 1 (one row modified)
      * String json = "{\"messageText\": \"text changed\"}";
-     *  TODO
+     *   /**
+     * Responde 400 if doesn't user doesnt exist, message is too long, or empty string
      */
-    // @PatchMapping("/messages/{id}")
-    // public ResponseEntity<Integer> updateMessage(@PathVariable("id") int id, @ResponseBody Message message) {
-    //     if (messageService.existsById(id)) {
-    //         messageService.updateMessage(id);
-    //         return ResponseEntity.ok(1);
-    //     } else {
-    //         return ResponseEntity.ok().build();
-    //     }
-    // }
+    @PatchMapping("/messages/{id}")
+    public ResponseEntity<Integer> updateMessage(@PathVariable("id") int id, @RequestBody Message message) {
+        System.out.println("MESSAGE TEXT:" + message.getMessageText() + "-----");
+        System.out.println(message.getMessageText() == "");
 
-
-    
+        if (message.getMessageText() == "" ||
+           message.getMessageText().length() > 255 ||
+           !messageService.existsById(id)
+        ) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            messageService.updateMessage(id, message.getMessageText());
+            return ResponseEntity.ok(1);
+        }
+    }
+   
 }

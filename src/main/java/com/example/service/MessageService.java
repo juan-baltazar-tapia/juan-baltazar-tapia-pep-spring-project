@@ -45,4 +45,8 @@ public class MessageService {
     public Optional<Message> getMessageById(int id) {
         return messageRepository.findById(id);
     }
+
+    public void updateMessage(int id, String message) {
+        messageRepository.updateMessageText(id, message);
+    }
 }
